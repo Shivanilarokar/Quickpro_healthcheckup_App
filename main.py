@@ -1,106 +1,163 @@
 import time
 
 # 1. User Profile
+print("\n📝 Welcome to the HealthCheck App!\nPlease provide the following details:")
 
-Name = input("Enter your name: ").title
-Age = int(input("Enter your age: "))
-Gender = input("Enter you gender: only male, female, or other): ").lower()
-city = input("Enter your city: ")
+name = input("Enter your name: ").title()
 
-#  Health inputs 
+age = input("Enter your age: ").strip()
+if not age.isdigit():
+    print("❌ Invalid input. Age must be a number.")
+    exit()
+age = int(age)
+
+gender = input("Enter your gender (male/female/other): ").lower().strip()
+if gender not in ["male", "female", "other"]:
+    print("❌ Invalid gender. Please enter 'male', 'female', or 'other'.")
+    exit()
+
+city = input("Enter your city: ").title().strip()
+
+# 2. Health Inputs
 print("\n🤒 Select your main symptom from the list below:")
 print("Options: fever, cough, fatigue, headache, chest pain, breathlessness")
-main_symptoms = input("Enter your main symptoms: (choose from: fever, cough, fatigue, headache, chest pain, breathlessness): ").lower()                                                                                                                                      
-Fever = float(input("Enter your body temperature in (F): ")) 
-no_of_sick_days = int(input("No of days that you are sick: "))
-smoking_habit= input("Do you smoke? (yes/no): ").lower() 
-Sleep_hours = int(input("How many hours do you sleep? "))
-Mood = input("How is your mood? (calm, anxious, sad, irritable): ").lower()
-pre_exisiting_conditions = input("Do you have any pre-existing conditions? (yes/no): ").lower()
-cough = int(input("No of days since you have a cough :" )) 
-# Step 3: Simulated analysis
+main_symptoms = input("Enter your main symptom: ").lower().strip()
+
+fever = input("Enter your body temperature in Fahrenheit (F): ")
+if not fever.replace('.', '', 1).isdigit():
+    print("❌ Invalid input. Temperature must be a number.")
+    exit()
+fever = float(fever)
+
+no_of_sick_days = input("Number of days you've been sick: ")
+if not no_of_sick_days.isdigit():
+    print("❌ Invalid input. Sick days must be a number.")
+    exit()
+no_of_sick_days = int(no_of_sick_days)
+
+smoking_habit = input("Do you smoke? (yes/no): ").lower().strip()
+if smoking_habit not in ["yes", "no"]:
+    print("❌ Invalid input. Please enter 'yes' or 'no'.")
+    exit()
+
+sleep_hours = input("How many hours do you sleep per night? ")
+if not sleep_hours.isdigit():
+    print("❌ Invalid input. Sleep hours must be a number.")
+    exit()
+sleep_hours = int(sleep_hours)
+
+mood = input("How is your mood? (calm, anxious, sad, irritable): ").lower().strip()
+if mood not in ["calm", "anxious", "sad", "irritable"]:
+    print("❌ Invalid input. Choose mood from the list.")
+    exit()
+
+pre_existing_conditions = input("Do you have any pre-existing conditions? (yes/no): ").lower().strip()
+if pre_existing_conditions not in ["yes", "no"]:
+    print("❌ Invalid input. Please enter 'yes' or 'no'.")
+    exit()
+
+cough_days = input("Number of days since you have had a cough: ")
+if not cough_days.isdigit():
+    print("❌ Invalid input. Cough days must be a number.")
+    exit()
+cough_days = int(cough_days)
+
+# 3. Simulated analysis
 print("\n🔍 Processing your inputs...")
 time.sleep(2)
 
-### ⚙️ 3. Risk Scoring Logic
+# 4. Risk Scoring Logic
 risk_score = 0
+
 if main_symptoms == "fever":
-    if Fever> 102  or no_of_sick_days >3:
+    if fever > 102 or no_of_sick_days > 3:
         risk_score += 3
-    elif Age >= 60 or Fever >= 102:
+    elif age >= 60:
         risk_score += 2
-if main_symptoms == "cough":
-    if no_of_sick_days >=5 :
+    else:
+        risk_score += 1
+
+elif main_symptoms == "cough":
+    if cough_days >= 5:
         risk_score += 2
-if main_symptoms == "fatigue":
-    if Age >30 :
-     risk_score += 2
-if main_symptoms == "headache":
-    if Fever > 100:
-        risk_score += 2 
-if main_symptoms == "chest pain":
+    else:
+        risk_score += 1
+
+elif main_symptoms == "fatigue":
+    if age > 30:
+        risk_score += 2
+    else:
+        risk_score += 1
+
+elif main_symptoms == "headache":
+    if fever > 100:
+        risk_score += 2
+    else:
+        risk_score += 1
+
+elif main_symptoms == "chest pain":
     risk_score += 3
+
 elif main_symptoms == "breathlessness":
     risk_score += 4
-elif smoking_habit == "yes":
-    risk_score += 2 
-elif Sleep_hours < 6:
-    risk_score += 1 
-elif Mood == "anxious" or Mood == "irritable" or Mood == "sad":
+
+# Additional Risk Factors
+if smoking_habit == "yes":
+    risk_score += 2
+
+if sleep_hours < 6:
     risk_score += 1
-if pre_exisiting_conditions == "yes":
+
+if mood in ["anxious", "irritable", "sad"]:
+    risk_score += 1
+
+if pre_existing_conditions == "yes":
     risk_score += 2
 else:
-    print("No pre-existing conditions detected.")
+    print("✅ No pre-existing conditions detected.")
 
-
-
-print("\n🔍 Processing your inputs...")
+# 5. Output Results
+print("\n🧾 Health Summary for", name + ":")
 time.sleep(2)
 
-
-# #  Health Risk Result
-# Based on total score, print a health warning:
-
-# 0–3 → 🟢 Low Risk
-# 4–6 → 🟠 Moderate Risk
-# 7+ → 🔴 High Risk 
-
-
-if risk_score >0 and risk_score <= 3:
-    print("\n🟢 Low Risk: Your health appears stable. Maintain a healthy lifestyle and monitor your symptoms.")  
-elif risk_score > 4 and risk_score <= 6:
-    print("\n🟠 Moderate Risk: You should consider consulting a healthcare professional for further evaluation.")
-elif risk_score >= 7:
+if risk_score >= 7:
     print("\n🔴 High Risk: Immediate medical attention is recommended. Please seek help from a healthcare provider.")
-
-# 4. Summary of User Profile and Health Risk
-print("\n📋 Summary of Your Profile:")
-
-
-# Personalised health advice.
-
-if Gender == "female" and Age >= 45:
-    print("Health Screening: Consider regular mammograms and bone density tests.") 
-elif Gender == "male" and smoking_habit == "yes":
-    print("Quit smoking to reduce the risk of lung disease and cancer. Consider regular prostate screenings.")
-elif Sleep_hours < 6:
-    print("Sleep Hygiene: Aim for 7-8 hours of quality sleep per night. Consider relaxation techniques before bedtime.")
-elif Mood == "anxious":
-    print("Mental Health: Consider mindfulness practices or speaking with a mental health professional to manage anxiety.")
-elif pre_exisiting_conditions == "yes":
-    print("Pre-existing Conditions: Regular check-ups with your healthcare provider are essential to manage your health effectively.")
+elif risk_score >= 4:
+    print("\n🟠 Moderate Risk: You should consider consulting a healthcare professional for further evaluation.")   
 else:
-    print("General Health Advice: Maintain a balanced diet, regular exercise, and stay hydrated. Regular health check-ups are recommended.")
+    print("\n✅ You're currently not showing concerning risk indicators. Stay healthy!")
 
-# Mental Health tips
+# Summary
+print("\n📋 Summary of Your Profile:")
+print(f"Name: {name}, Age: {age}, Gender: {gender.title()}, City: {city}")
+print(f"Main Symptom: {main_symptoms}, Temperature: {fever}°F, Sick for {no_of_sick_days} days")
+print(f"Smoker: {smoking_habit}, Sleep Hours: {sleep_hours}, Mood: {mood}")
+print(f"Pre-existing Conditions: {pre_existing_conditions}")
+
+# Health Advice
+print("\n💡 Personalized Health Advice:")
+if gender == "female" and age >= 45:
+    print("- Consider regular mammograms and bone density tests.")
+if gender == "male" and smoking_habit == "yes":
+    print("- Quit smoking to reduce lung disease and cancer risk. Consider regular prostate check-ups.")
+if sleep_hours < 6:
+    print("- Try to get 7–8 hours of sleep. Practice good sleep hygiene.")
+if mood == "anxious":
+    print("- Try mindfulness, journaling, or consult a therapist to manage anxiety.")
+if pre_existing_conditions == "yes":
+    print("- Schedule regular follow-ups with your healthcare provider.")
+else:
+    print("- Maintain a balanced diet, exercise regularly, and hydrate well.")
+
+# Mental Health Tips
 print("\n🧠 Mental Health Tips:")
+if mood == "calm":
+    print("- Keep it up! Continue activities that help you feel relaxed and happy.")
+elif mood == "sad":
+    print("- Talk to a friend or professional. Exercise and social connection can help uplift mood.")
+elif mood == "anxious":
+    print("- Practice deep breathing or box breathing. Consider therapy for support.")
+elif mood == "irritable":
+    print("- Take short breaks during the day and try stress relief techniques like yoga or meditation.")
 
-if Mood == "calm":
-    print("Keep up the good work! Continue engaging in activities that promote relaxation and well-being & maintain a positive mindset.")
-elif Mood =="sad":
-    print("Consider talking to a friend or a mental health professional. Engaging in physical activity can also help improve your mood.")
-elif Mood == "anxious":
-    print("Practice deep breathing & box brreathing exercises manage anxiety. Consider speaking with a mental health professional if needed.")
-elif Mood == "irritable":  
-    print("Take breaks and practice stress-relief techniques such as meditation or yoga.")
+print(f"\n💚 Thank you for using the HealthCheck App. Stay safe and take care {name}!")
