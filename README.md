@@ -1,1 +1,0 @@
-# Quickpro_healthcheckup_App
